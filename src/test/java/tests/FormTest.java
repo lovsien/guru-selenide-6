@@ -7,18 +7,13 @@ import pages.RegistrationPage;
 
 import java.io.File;
 
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
-
 public class FormTest {
-    RegistrationPage registrationPage = new RegistrationPage();
     String firstName = "Tanya";
     String lastName = "Garbaruk";
     String email = "test@email.com";
     String userNumber = "1234567890";
     String gender = "Female";
-    String yearValue = "2000";
+    String yearValue = "2001";
     String monthValue = "May";
     String dayValue = "04";
     String subject = "English";
@@ -29,6 +24,8 @@ public class FormTest {
     String state = "NCR";
     String city = "Delhi";
 
+    RegistrationPage registrationPage = new RegistrationPage();
+
     @BeforeAll
     static void setUp() {
         Configuration.baseUrl = "https://demoqa.com";
@@ -37,47 +34,24 @@ public class FormTest {
 
     @Test
     void submitCompletedFormSuccessfullyTest() {
-        registrationPage.openRegistrationPage();
+        registrationPage.openRegistrationPage()
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setEmail(email)
+                .setGenderField(gender)
+                .setPhoneNumberField(userNumber)
+                .setBirthDate(yearValue, monthValue, dayValue)
+                .setSubjectField(subject)
+                .setHobbyField(hobby)
+                .uploadProfilePicture(photo)
 
-        registrationPage.setFirstName(firstName);
-        registrationPage.setLastName(lastName);
-        registrationPage.setEmail(email);
-        registrationPage.setGenderField(gender);
-        registrationPage.setPhoneNumberField(userNumber);
+                .closeBan()
+                .setAddressField(currentAddress, state, city)
 
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__year-select").selectOptionByValue(yearValue);
-        $(".react-datepicker__month-select").selectOptionContainingText(monthValue);
-        $(".react-datepicker__day--0" + dayValue + ":not(.react-datepicker__day--outside-month)").click();
+                .clickSubmitButton()
 
-        $("#subjectsInput").setValue(subject).pressEnter();
-        $(byText(hobby)).click();
-        $("#uploadPicture").uploadFile(photo);
-
-        $("#currentAddress").setValue(currentAddress);
-        $("#state").scrollTo();
-        $(byText("Select State")).click();
-        $(byText(state)).click();
-
-        $(byText("Select City")).click();
-        $(byText(city)).click();
-
-//        executeJavaScript("$('#fixedban').remove()");
-//        executeJavaScript("$('footer').remove()");
-
-        $("#submit").shouldBe(visible).click();
-
-        $(".modal-dialog").should(appear);
-        $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
-        $x("//td[text()='Student Name']/following-sibling::*").shouldHave(text(firstName + " " + lastName));
-        $x("//td[text()='Student Email']/following-sibling::*").shouldHave(text(email));
-        $x("//td[text()='Gender']/following-sibling::*").shouldHave(text(gender));
-        $x("//td[text()='Mobile']/following-sibling::*").shouldHave(text(userNumber));
-        $x("//td[text()='Date of Birth']/following-sibling::*").shouldHave(text(dayValue + " " + monthValue + "," + yearValue));
-        $x("//td[text()='Subjects']/following-sibling::*").shouldHave(text(subject));
-        $x("//td[text()='Hobbies']/following-sibling::*").shouldHave(text(hobby));
-        $x("//td[text()='Picture']/following-sibling::*").shouldHave(text(photoName));
-        $x("//td[text()='Address']/following-sibling::*").shouldHave(text(currentAddress));
-        $x("//td[text()='State and City']/following-sibling::*").shouldHave(text(state + " " + city));
+                .checkModalWindowAppears()
+                .checkStudentDataWithSetValue(firstName, lastName, email, userNumber, gender, dayValue,
+                        monthValue, yearValue, subject, hobby, photoName, currentAddress, state, city);
     }
 }
