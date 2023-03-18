@@ -1,13 +1,10 @@
 package tests;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pages.RegistrationPage;
 
 import java.io.File;
 
-public class FormTest {
+public class FormTest extends TestBase {
     String firstName = "Tanya";
     String lastName = "Garbaruk";
     String email = "test@email.com";
@@ -23,14 +20,6 @@ public class FormTest {
     String currentAddress = "2134 Willison Street";
     String state = "NCR";
     String city = "Delhi";
-
-    RegistrationPage registrationPage = new RegistrationPage();
-
-    @BeforeAll
-    static void setUp() {
-        Configuration.baseUrl = "https://demoqa.com";
-        Configuration.browserSize = "1920x1080";
-    }
 
     @Test
     void submitCompletedFormSuccessfullyTest() {
