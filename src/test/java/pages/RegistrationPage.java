@@ -1,15 +1,18 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
+import pages.components.CalendarComponent;
+import pages.components.ModalWindowComponent;
 
 import java.io.File;
-import java.util.GregorianCalendar;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
 public class RegistrationPage {
+    CalendarComponent calendarComponent = new CalendarComponent();
+    ModalWindowComponent modalComponent = new ModalWindowComponent();
     static final String registrationHeader = "Student Registration Form";
     static final String submittingFormText = "Thanks for submitting the form";
     private final SelenideElement h5Header = $("div.practice-form-wrapper h5");
@@ -19,8 +22,6 @@ public class RegistrationPage {
     private final SelenideElement emailField = $("#userEmail");
     private final SelenideElement phoneNumberField = $("#userNumber");
     private final SelenideElement datePicker = $("#dateOfBirthInput");
-    private final SelenideElement yearDatePicker = $(".react-datepicker__year-select");
-    private final SelenideElement monthDatePicker = $(".react-datepicker__month-select");
     private final SelenideElement subjectField = $("#subjectsInput");
     private final SelenideElement uploadPictureButton = $("#uploadPicture");
     private final SelenideElement currentAddressField = $("#currentAddress");
@@ -73,10 +74,7 @@ public class RegistrationPage {
 
     public RegistrationPage setBirthDate(String year, String month, String day) {
         datePicker.click();
-        yearDatePicker.selectOptionByValue(year);
-        monthDatePicker.selectOptionContainingText(month);
-        $(".react-datepicker__day--0" + day + ":not(.react-datepicker__day--outside-month)").click();
-
+        calendarComponent.setDate(year, month, day);
         return this;
     }
 
@@ -118,70 +116,20 @@ public class RegistrationPage {
         return this;
     }
 
-    public RegistrationPage checkStudentNameFieldContainsSetValue(String firstName, String lastName) {
-        studentNameField.shouldHave(text(firstName + " " + lastName));
-        return this;
-    }
-
-    public RegistrationPage checkStudentEmailFieldContainsSetValue(String email) {
-        studentEmailField.shouldHave(text(email));
-        return this;
-    }
-
-    public RegistrationPage checkStudentGenderFieldContainsSetValue(String gender) {
-        studentGenderField.shouldHave(text(gender));
-        return this;
-    }
-
-    public RegistrationPage checkStudentNumberFieldContainsSetValue(String userNumber) {
-        studentMobileField.shouldHave(text(userNumber));
-        return this;
-    }
-
-    public RegistrationPage checkStudentBirthDateFieldContainsSetValue(String day, String month, String year) {
-        studentBirthDateField.shouldHave(text(day + " " + month + "," + year));
-        return this;
-    }
-
-    public RegistrationPage checkStudentSubjectsFieldContainsSetValue(String subject) {
-        studentSubjectsField.shouldHave(text(subject));
-        return this;
-    }
-
-    public RegistrationPage checkStudentHobbiesFieldContainsSetValue(String hobby) {
-        studentHobbiesField.shouldHave(text(hobby));
-        return this;
-    }
-
-    public RegistrationPage checkStudentPictureNameFieldContainsSetValue(String photoName) {
-        studentPictureNameField.shouldHave(text(photoName));
-        return this;
-    }
-
-    public RegistrationPage checkStudentCurrentAddressFieldContainsSetValue(String currentAddress) {
-        studentAddressField.shouldHave(text(currentAddress));
-        return this;
-    }
-
-    public RegistrationPage checkStudentCurrentAddressFieldContainsSetValue(String state, String city) {
-        studentStateAndCityField.shouldHave(text(state + " " + city));
-        return this;
-    }
-
     public RegistrationPage checkStudentDataWithSetValue(String firstName, String lastName, String email, String userNumber,
-                                             String gender, String day, String month, String year, String subject,
-                                             String hobby, String photoName, String currentAddress, String state,
-                                             String city) {
-        checkStudentNameFieldContainsSetValue(firstName, lastName);
-        checkStudentEmailFieldContainsSetValue(email);
-        checkStudentGenderFieldContainsSetValue(gender);
-        checkStudentNumberFieldContainsSetValue(userNumber);
-        checkStudentBirthDateFieldContainsSetValue(day, month, year);
-        checkStudentSubjectsFieldContainsSetValue(subject);
-        checkStudentHobbiesFieldContainsSetValue(hobby);
-        checkStudentPictureNameFieldContainsSetValue(photoName);
-        checkStudentCurrentAddressFieldContainsSetValue(currentAddress);
-        checkStudentCurrentAddressFieldContainsSetValue(state, city);
+                                                         String gender, String day, String month, String year, String subject,
+                                                         String hobby, String photoName, String currentAddress, String state,
+                                                         String city) {
+        modalComponent.checkStudentNameFieldContainsSetValue(firstName, lastName);
+        modalComponent.checkStudentEmailFieldContainsSetValue(email);
+        modalComponent.checkStudentGenderFieldContainsSetValue(gender);
+        modalComponent.checkStudentNumberFieldContainsSetValue(userNumber);
+        modalComponent.checkStudentBirthDateFieldContainsSetValue(day, month, year);
+        modalComponent.checkStudentSubjectsFieldContainsSetValue(subject);
+        modalComponent.checkStudentHobbiesFieldContainsSetValue(hobby);
+        modalComponent.checkStudentPictureNameFieldContainsSetValue(photoName);
+        modalComponent.checkStudentCurrentAddressFieldContainsSetValue(currentAddress);
+        modalComponent.checkStudentCurrentAddressFieldContainsSetValue(state, city);
 
         return this;
     }
